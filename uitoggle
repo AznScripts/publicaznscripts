@@ -1,0 +1,21 @@
+local screenGui = game:GetService("CoreGui"):FindFirstChild("ScreenGui")
+if not screenGui then
+screenGui = Instance.new("ScreenGui")
+screenGui.Name = "ScreenGui"
+screenGui.Parent = game:WaitForChild("CoreGui")
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 70, 0, 20)
+button.Position = UDim2.new(0, 10, 1, -30)
+button.Text = "UI Toggle"
+button.Parent = screenGui
+button.MouseButton1Click:Connect(function()
+local uiLib = game:GetService("CoreGui"):FindFirstChild("UiLib")
+if uiLib then
+uiLib.Enabled = not uiLib.Enabled
+else
+warn("UiLib not found in CoreGui!")
+end
+end)
+else
+print("ScreenGui already exists!")
+end
