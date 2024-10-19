@@ -1,7 +1,7 @@
-local screenGui = game:GetService("CoreGui"):FindFirstChild("ScreenGui")
+local screenGui = game:GetService("CoreGui"):FindFirstChild("TSc")
 if not screenGui then
 screenGui = Instance.new("ScreenGui")
-screenGui.Name = "ScreenGui"
+screenGui.Name = "TSc"
 screenGui.Parent = game:WaitForChild("CoreGui")
 local button = Instance.new("TextButton")
 button.Size = UDim2.new(0, 70, 0, 20)
