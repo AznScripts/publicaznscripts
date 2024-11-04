@@ -1,21 +1,63 @@
 local screenGui = game:GetService("CoreGui"):FindFirstChild("TSc")
 if not screenGui then
-screenGui = Instance.new("ScreenGui")
-screenGui.Name = "TSc"
-screenGui.Parent = game:WaitForChild("CoreGui")
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 70, 0, 20)
-button.Position = UDim2.new(0, 10, 1, -30)
-button.Text = "UI Toggle"
-button.Parent = screenGui
-button.MouseButton1Click:Connect(function()
-local uiLib = game:GetService("CoreGui"):FindFirstChild("UiLib")
-if uiLib then
-uiLib.Enabled = not uiLib.Enabled
+    screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "TSc"
+    screenGui.Parent = game:WaitForChild("CoreGui")
+
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 70, 0, 20)
+    button.Position = UDim2.new(0, 10, 1, -30)
+    button.Text = "UI Toggle"
+    button.Parent = screenGui
+
+    -- Variables for dragging
+    local dragging = false
+    local dragStart, startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        button.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+
+    button.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = button.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    button.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch and dragging then
+            update(input)
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch and dragging then
+            update(input)
+        end
+    end)
+
+    button.MouseButton1Click:Connect(function()
+        local uiLib = game:GetService("CoreGui"):FindFirstChild("UiLib")
+        if uiLib then
+            uiLib.Enabled = not uiLib.Enabled
+        else
+            warn("UiLib not found in CoreGui!")
+        end
+    end)
 else
-warn("UiLib not found in CoreGui!")
-end
-end)
-else
-print("ScreenGui already exists!")
+    print("ScreenGui already exists!")
 end
